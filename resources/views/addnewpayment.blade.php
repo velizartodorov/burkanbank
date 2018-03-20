@@ -10,12 +10,19 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
   <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
 </head>
-<form>
+<form method="post" action="{{ route('add-payment-post') }}">
+   {{csrf_field()}}
+<body>
   <h1>Плащане</h1>
   <div class="form-group row">
-    <label for="ordererIBAN" class="col-sm-5 col-form-label">IBAN на наредителя</label>
+    <label for="ordererIBAN" class="col-sm-5 col-form-label text-danger">IBAN на наредителя</label>
     <div class="col-sm-7">
-      <input type="text" class="form-control" id="ordererIBAN" placeholder="IBAN на наредителя" name="ordererIBAN">
+      <input type="text" class="form-control is-invalid" id="ordererIBAN" placeholder="IBAN на наредителя" name="ordererIBAN">
+    </div>
+    <div class="col-sm-12 col-sm-12__validation-textbox">
+      <small id="passwordHelp" class="text-danger">
+        Невалиден IBAN на наредителя!
+      </small>      
     </div>
   </div>
   <div class="form-group row">
@@ -32,23 +39,23 @@
   </div>
   <div class="form-group row">
     <label for="amount" class="col-sm-5 col-form-label">Дата</label>
-        <div class='col-sm-7'>
-            <div class="form-group">
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
+    <div class='col-sm-7'>
+      <div class="form-group">
+        <div class='input-group date' id='datetimepicker1'>
+          <input type='text' class="form-control" />
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
         </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
-        </script>
-</div>
- <div class="form-group row">
+      </div>
+    </div>
+    <script type="text/javascript">
+      $(function () {
+        $('#datetimepicker1').datetimepicker();
+      });
+    </script>
+  </div>
+  <div class="form-group row">
     <label for="paymentReason" class="col-sm-5 col-form-label">Основание за плащане</label>
     <div class="col-sm-7">
       <input type="text" class="form-control" id="paymentReason" placeholder="Основание за плащане" name="paymentReason">
@@ -59,21 +66,26 @@
       <button type="submit" class="btn btn-primary btn btn-primary--submit-button">Плати</button>
     </div>
   </div>
+</body>
 </form>
 <html>
 <style>
- body{
-    width: 50%;
-    margin: 0 auto;
-    padding-top: 10%;
- }
+body{
+  width: 30%;
+  margin: 0 auto;
+  padding-top: 10%;
+}
 
- .btn-primary--submit-button{
-    float:right;
- }
+.btn-primary--submit-button{
+  float:right;
+}
 
- h1{
+.col-sm-12__validation-textbox{
+  text-align: right;
+}
+
+h1{
   text-align: center;
   margin-bottom: 35px;
- }
+}
 </style>

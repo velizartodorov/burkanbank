@@ -14,8 +14,15 @@ use App\Http\Controllers\Controller;
 |
 */
 
-// Route::get('/', function () {
-    
-// });
+Route::get('/', function () {
+	return redirect()->route('add-new-payment-get');    
+});
 
-Route::get('/api/payments', 'OrderBankController@addNewPayment');
+Route::get('/api/newpayment', [
+    'as' => 'add-new-payment-get', 
+    'uses' => 'OrderBankController@addNewPaymentGet']);
+
+
+Route::post('/api/payment', [
+    'as' => 'add-payment-post', 
+    'uses' => 'OrderBankController@addNewPaymentPost']);
