@@ -14,27 +14,46 @@
    {{csrf_field()}}
 <body>
   <h1>Плащане</h1>
-  <div class="form-group row">
-    <label for="ordererIBAN" class="col-sm-5 col-form-label text-danger">IBAN на наредителя</label>
-    <div class="col-sm-7">
-      <input type="text" class="form-control is-invalid" id="ordererIBAN" placeholder="IBAN на наредителя" name="ordererIBAN">
+  @if ($errors->any())
+    <div class="alert alert-danger alert-danger--customer">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
-    <div class="col-sm-12 col-sm-12__validation-textbox">
-      <small id="passwordHelp" class="text-danger">
-        Невалиден IBAN на наредителя!
-      </small>      
+@endif
+@if(Session::has('iban-error'))
+    <div class="alert alert-danger">
+        <ul>
+            <li>{{Session::get('iban-error')}}</li>
+        </ul>
+    </div>
+@endif
+@if(Session::has('success'))
+    <div class="alert alert-success">
+        <ul>
+            <li>{{Session::get('success')}}</li>
+        </ul>
+    </div>
+@endif
+<div class="form-container">
+  <div class="form-group row">
+    <label for="IBAN_orig" class="col-sm-5 col-form-label">IBAN на наредителя</label>
+    <div class="col-sm-7">
+      <input type="text" class="form-control" value="{{old('IBAN_orig')? old('IBAN_orig') : ''}}" id="IBAN_orig" placeholder="IBAN на наредителя" name="IBAN_orig">
     </div>
   </div>
   <div class="form-group row">
-    <label for="beneficientIBAN" class="col-sm-5 col-form-label">IBAN на бенефициента</label>
+    <label for="IBAN_benef" class="col-sm-5 col-form-label">IBAN на бенефициента</label>
     <div class="col-sm-7">
-      <input type="text" class="form-control" id="beneficientIBAN" placeholder="IBAN на бенефициента" name="beneficientIBAN">
+      <input type="text" class="form-control" value="{{old('IBAN_benef')? old('IBAN_benef') : ''}}" id="IBAN_benef" placeholder="IBAN на бенефициента" name="IBAN_benef">
     </div>
   </div>
   <div class="form-group row">
     <label for="amount" class="col-sm-5 col-form-label">Сума</label>
     <div class="col-sm-7">
-      <input type="text" class="form-control" id="amount" placeholder="Сума" name="amount">
+      <input type="text" class="form-control" value="{{old('amount')? old('amount') : ''}}" id="amount" placeholder="Сума" name="amount">
     </div>
   </div>
   <div class="form-group row">
@@ -42,7 +61,7 @@
     <div class='col-sm-7'>
       <div class="form-group">
         <div class='input-group date' id='datetimepicker1'>
-          <input type='text' class="form-control" />
+          <input type='text' class="form-control" value="{{old('date')? old('date') : ''}}" name="date" />
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
           </span>
@@ -56,9 +75,9 @@
     </script>
   </div>
   <div class="form-group row">
-    <label for="paymentReason" class="col-sm-5 col-form-label">Основание за плащане</label>
+    <label for="reason" class="col-sm-5 col-form-label">Основание за плащане</label>
     <div class="col-sm-7">
-      <input type="text" class="form-control" id="paymentReason" placeholder="Основание за плащане" name="paymentReason">
+      <input type="text" class="form-control" id="reason" value="{{old('reason')? old('reason') : ''}}" placeholder="Основание за плащане" name="reason">
     </div>
   </div>
   <div class="form-group row">
@@ -66,14 +85,15 @@
       <button type="submit" class="btn btn-primary btn btn-primary--submit-button">Плати</button>
     </div>
   </div>
+</div>
 </body>
 </form>
 <html>
 <style>
+
 body{
-  width: 30%;
+  width: 70%;
   margin: 0 auto;
-  padding-top: 10%;
 }
 
 .btn-primary--submit-button{
@@ -82,6 +102,15 @@ body{
 
 .col-sm-12__validation-textbox{
   text-align: right;
+}
+
+.form-container, .alert-danger--customer{
+    width: 50%;
+    margin: 0 auto;
+}
+
+.alert-danger--customer{
+    margin-bottom: 20px;
 }
 
 h1{
