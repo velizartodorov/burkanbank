@@ -38,4 +38,60 @@ use Illuminate\Support\Facades\Input;
             return false;
         }
     }
+
+    public static function gettAllPayments()
+    {
+        $allPayments = Account::getAllPayments();
+
+        if($allPayments->isEmpty())
+        {
+            self::prettyJSON($allPayments);
+        }
+        else{
+            print_r('Not found.');
+        }
+        
+    }
+
+    public static function getPaymentsSearch($search)
+    {
+        $allPayments = Account::getAllPaymentsbyIBANOrUser($search);
+
+
+        if(!$allPayments->isEmpty())
+        {
+            self::prettyJSON($allPayments);
+        }
+        else{
+            print_r('Not found.');
+        }
+    }
+
+    public static function getIBANBenificient($IBAN)
+    {
+        $allPayments = Account::getIBANBenificientExists($IBAN);
+
+
+        if(!$allPayments->isEmpty())
+        {
+            print_r('valid: "true" ');
+            self::prettyJSON($allPayments);
+        }
+        else{
+            print_r('valid: "false" ');
+        }
+    }
+
+    private static function prettyJSON($array)
+    {
+        foreach($array as $arr)
+        {
+            echo '<pre>';
+            foreach($arr as $aK => $aV)
+            {
+            print_r(json_encode($aK) .":".json_encode($aV).'<br>');
+            }
+            echo '</pre>';
+        }
+    }
 }

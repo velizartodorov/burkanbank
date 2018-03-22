@@ -95,4 +95,79 @@ class Account extends Model
     {
        return DB::table('accounts')->where('IBAN', $IBAN)->first(); 
     }
+
+    public static function getAllPayments()
+    {
+       return DB::table('payments')->select("OrdererIBAN as IBAN_orig", 
+                                            "PayeeIBAN as IBAN_benef",
+                                            "Amount as amount",
+                                            "PaymentDate as date", 
+                                            "PaymentReason as reason")->get(); 
+    }
+
+    public static function getAllPaymentsbyIBANOrUser($searchString)
+    {
+        $userFound = DB::table('customers')
+                ->where('FirstName', 'like', '%' .  $searchString . '%')
+                ->orWhere('LastName', 'like', '%' .  $searchString . '%')
+                ->get();
+
+
+        if(count($userFound))
+        {
+            $userIDs = [];
+            
+            foreach($userFound as $user)
+            {
+                $userIDs[] = $user->CustomerID;
+            }
+
+            $accountsFound = DB::table('accounts')
+                ->whereIn('CustomerID', $userIDs)
+                ->get();
+
+            $IBANs = [];
+
+            foreach($accountsFound as $acc)
+            {
+                $IBANs[] = $acc->IBAN;
+            }
+                $payment = DB::table('payments')
+                ->whereIn('OrdererIBAN', $IBANs)
+                ->orWhereIn('PayeeIBAN', $IBANs)
+               ->select("OrdererIBAN as IBAN_orig", 
+                    "PayeeIBAN as IBAN_benef",
+                    "Amount as amount",
+                    "PaymentDate as date", 
+                    "PaymentReason as reason")
+                ->get(); 
+                return $payment;
+        }
+        else{
+            $payment = DB::table('payments')
+                ->where('OrdererIBAN', $searchString)
+                ->orWhere('PayeeIBAN', $searchString)
+               ->select("OrdererIBAN as IBAN_orig", 
+                    "PayeeIBAN as IBAN_benef",
+                    "Amount as amount",
+                    "PaymentDate as date", 
+                    "PaymentReason as reason")
+                ->get();
+                return $payment;
+        }
+    
+    }
+
+    public static function getIBANBenificientExists($searchString)
+    {
+        $accountsFound = DB::table('accounts')
+                ->leftJoin('customers', 'accounts.CustomerID', '=', 'customers.CustomerID')
+                ->where('IBAN', $searchString)
+                ->select('IBAN as iban',
+                         'FirstName as first_name',
+                         'LastName as last_name',
+                         'Email as email')
+                ->get();
+        return $accountsFound;
+    }
 }
