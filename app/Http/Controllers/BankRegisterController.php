@@ -48,7 +48,8 @@ use Illuminate\Support\Facades\Input;
             self::prettyJSON($allPayments);
         }
         else{
-            print_r('Not found.');
+            $message = array("result"=>"fail", "error_code"=>"500", "error_message"=>"No payments found.");
+            print_r(json_encode($message));
         }
         
     }
@@ -63,7 +64,8 @@ use Illuminate\Support\Facades\Input;
             self::prettyJSON($allPayments);
         }
         else{
-            print_r('Not found.');
+            $message = array("result"=>"fail", "error_code"=>"500", "error_message"=>"IBAN or user not found.");
+            print_r(json_encode($message));
         }
     }
 

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Input;
 
  	public function addNewPaymentPost()
  	{
- 		$paymentData =Input::all();
+ 		$paymentData = Input::all();
 
  		$rules = [
             'IBAN_orig' => 'required|different:IBAN_benef',
@@ -46,7 +46,6 @@ use Illuminate\Support\Facades\Input;
         else{
                 if(Account::ifIBANandAmountExists($paymentData))
                 {
-
                     unset($paymentData['_token']);
                        $paymentData = BankRegisterController::redirectBank(json_encode($paymentData));
                         if($paymentData)
@@ -54,26 +53,34 @@ use Illuminate\Support\Facades\Input;
                             $paymentData = BankRegisterController::redirectToPayment(json_encode($paymentData));
                             if($paymentData)
                             {
+                                $message = array("result"=>"fail", "error_code"=>"200", "success_message"=>"Succesful transaction");
+                                json_encode($message);
                                 return back()
-                                ->with('success', 'Транзакцията беше извършена успешно.') 
-                                ->withInput();
-                            }
+                                ->with('success', $message) 
+                                ->withInput();                            }
                             else{
+                                $message = array("result"=>"fail", "error_code"=>"500", "error_message"=>"Invalid transaction.");
+                                json_encode($message);
                                 return back()
-                                ->with('iban-error', 'Неуспешно транзакция.') 
+                                ->with('iban-error', $message) 
                                 ->withInput();
                             }
                         }
                         else{
+                            $message = array("result"=>"fail", "error_code"=>"502", "error_message"=>"Beneficient IBAN invalid.");
+                            json_encode($message);
                             return back()
-                            ->with('iban-error', 'Невалиден IBAN на бенефициента.') 
+                            ->with('iban-error', $message) 
                             ->withInput();
                         }
                 }
-                else
+                else{ 
+                    $message = array("result"=>"fail", "error_code"=>"502", "error_message"=>"Orderer IBAN invalid or amount not enough.");
+                    json_encode($message);
                      return back()
-                            ->with('iban-error', 'Недостатъчна сума или невалиден IBAN.') 
+                            ->with('iban-error', $message) 
                             ->withInput();
+                }
         }
 
  	}
