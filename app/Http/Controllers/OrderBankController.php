@@ -53,14 +53,15 @@ use Illuminate\Support\Facades\Input;
                             $paymentData = BankRegisterController::redirectToPayment(json_encode($paymentData));
                             if($paymentData)
                             {
-                                $message = array("result"=>"fail", "error_code"=>"200", "success_message"=>"Succesful transaction");
-                                json_encode($message);
+                                $message = array("result"=>"success", "error_code"=>"200", "success_message"=>"Succesful transaction");
+                                $message = json_encode($message);
                                 return back()
                                 ->with('success', $message) 
-                                ->withInput();                            }
+                                ->withInput();                            
+                            }
                             else{
                                 $message = array("result"=>"fail", "error_code"=>"500", "error_message"=>"Invalid transaction.");
-                                json_encode($message);
+                                $message = json_encode($message);
                                 return back()
                                 ->with('iban-error', $message) 
                                 ->withInput();
@@ -68,7 +69,7 @@ use Illuminate\Support\Facades\Input;
                         }
                         else{
                             $message = array("result"=>"fail", "error_code"=>"502", "error_message"=>"Beneficient IBAN invalid.");
-                            json_encode($message);
+                            $message = json_encode($message);
                             return back()
                             ->with('iban-error', $message) 
                             ->withInput();
@@ -76,7 +77,7 @@ use Illuminate\Support\Facades\Input;
                 }
                 else{ 
                     $message = array("result"=>"fail", "error_code"=>"502", "error_message"=>"Orderer IBAN invalid or amount not enough.");
-                    json_encode($message);
+                    $message = json_encode($message);
                      return back()
                             ->with('iban-error', $message) 
                             ->withInput();

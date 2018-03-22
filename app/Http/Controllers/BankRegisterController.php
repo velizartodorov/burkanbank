@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Input;
     {
         $allPayments = Account::getAllPayments();
 
-        if($allPayments->isEmpty())
+        if(!$allPayments->isEmpty())
         {
             self::prettyJSON($allPayments);
         }
@@ -91,7 +91,7 @@ use Illuminate\Support\Facades\Input;
             echo '<pre>';
             foreach($arr as $aK => $aV)
             {
-            print_r(json_encode($aK) .":".json_encode($aV).'<br>');
+            print_r(json_encode($aK, JSON_UNESCAPED_UNICODE) .":".json_encode($aV, JSON_UNESCAPED_UNICODE).'<br>');
             }
             echo '</pre>';
         }
